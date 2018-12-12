@@ -34,11 +34,21 @@ func NewAPIServer() *APIServer {
 	return &s
 }
 
+// addRoutes will populate the router with the routes for the application.
+func addRoutes(api *APIServer) {
+	api.router.HandleFunc("/", indexHandler)
+	addEventRoutes(api.router.PathPrefix("/events").Subrouter())
+}
+
+// IndexHandler is responsible for handling requests for the index or home page.
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Index Handler"))
+}
+
 // Run will start the web server.
 func Run() {
 	api := NewAPIServer()
-	api.router.HandleFunc("/", IndexHandler)
-	api.router.HandleFunc("/events", EventsHandler)
+	addRoutes(api)
 
 	srv := &http.Server{
 		Handler:      api.router,
