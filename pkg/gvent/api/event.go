@@ -18,7 +18,26 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
+
+// Event represents an activity at a specified date and time.
+type Event struct {
+	// ID is the unique identifier for the Event.
+	ID string `json:"id"`
+
+	// Title is a summary for the Event.
+	Title string `json:"title"`
+
+	// Description is the detailed information for the Event.
+	Description string `json:"description"`
+
+	// StartDate is the date and time that the Event starts.
+	StartDate string `json:"startDate"`
+
+	// EndDate is the date and time that the Event ends.
+	EndDate string `json:"endDate"`
+}
 
 func addEventRoutes(r *mux.Router) {
 	r.HandleFunc("/", listEvents).Methods("GET").Name("list-events")
@@ -30,25 +49,27 @@ func addEventRoutes(r *mux.Router) {
 
 // listEvents will return a list of Event objects.
 func listEvents(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("List Events Handler"))
+	log.Debug("List Events Handler Called")
+	events := make([]Event, 0)
+	writeList(w, events, "events")
 }
 
 // newEvent will create a new Event object.
 func newEvent(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("New Event Handler"))
+	log.Debug("New Event Handler Called")
 }
 
 // getEvent will retrieve the Event object with the given id.
 func getEvent(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Get Event Handler"))
+	log.Debug("Get Event Handler Called")
 }
 
 // updateEvent will update the Event object with the given id.
 func updateEvent(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Update Event Handler"))
+	log.Debug("Update Event Handler Called")
 }
 
 // deleteEvent will delete the Event object with the given id.
 func deleteEvent(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Delete Event Handler"))
+	log.Debug("Delete Event Handler Called")
 }
