@@ -1,4 +1,4 @@
-.PHONY: build clean image run
+.PHONY: build clean dep image run
 
 build:
 	mkdir -p ./build
@@ -6,6 +6,9 @@ build:
 
 clean:
 	rm -fr ./build
+
+dep:
+	dep ensure && dep status
 
 image:
 	docker build -t jmckind/gvent-api:latest .
