@@ -15,10 +15,38 @@
 package main
 
 import (
+	"os"
+	"runtime"
+
 	api "github.com/jmckind/gvent-api/pkg/gvent/api"
+	"github.com/jmckind/gvent-api/version"
+	log "github.com/sirupsen/logrus"
 )
 
 // main is the entrypoint for the application.
 func main() {
+	configureLogging()
+	printVersion()
 	api.Run()
+}
+
+// configureLogging sets up logging for the application.
+func configureLogging() {
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	//logrus.SetOutput(os.Stdout)
+
+	// Allow the log level to be set using an environment variable
+	level, err := log.ParseLevel(os.Getenv("LOG_LEVEL"))
+	if err != nil {
+		level = log.InfoLevel
+	}
+	log.SetLevel(level)
+}
+
+// printVersion outputs the architecture and application versions.
+func printVersion() {
+	log.Infof("Go Version: %s", runtime.Version())
+	log.Infof("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH)
+	log.Infof("operator-sdk Version: %v", version.Version)
 }
