@@ -15,11 +15,11 @@
 package gvent
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 // APIServer holds the context for the running api server.
@@ -42,20 +42,22 @@ func addRoutes(api *APIServer) {
 
 // IndexHandler is responsible for handling requests for the index or home page.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Index Handler"))
+	log.Debug("Index Handler Called")
 }
 
 // Run will start the web server.
 func Run() {
+	addr := "0.0.0.0:8000"
 	api := NewAPIServer()
 	addRoutes(api)
 
 	srv := &http.Server{
 		Handler:      api.router,
-		Addr:         "0.0.0.0:8000",
+		Addr:         addr,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
+	log.Infof("Listening at %s", addr)
 	log.Fatal(srv.ListenAndServe())
 }
