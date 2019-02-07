@@ -1,4 +1,4 @@
-// Copyright [yyyy] [name of copyright owner]
+// Copyright 2018 gvent Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,48 +16,29 @@ package gvent
 
 import (
 	"net/http"
-	"time"
 
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
+	"github.com/gin-gonic/gin"
+	"github.com/jmckind/gvent-api/version"
+	r "gopkg.in/rethinkdb/rethinkdb-go.v5"
 )
 
-// APIServer holds the context for the running api server.
-type APIServer struct {
-	router *mux.Router
-}
+// DBSession holds the global reference to the connection pool.
+var DBSession *r.Session
 
-// NewAPIServer returns a new APIServer instance.
-func NewAPIServer() *APIServer {
-	s := APIServer{}
-	s.router = mux.NewRouter()
-	return &s
-}
-
-// addRoutes will populate the router with the routes for the application.
-func addRoutes(api *APIServer) {
-	api.router.HandleFunc("/", indexHandler)
-	addEventRoutes(api.router.PathPrefix("/events").Subrouter())
-}
-
-// IndexHandler is responsible for handling requests for the index or home page.
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Debug("Index Handler Called")
+// init will open a connection to the database and initialze.
+func init() {
+	DBSession = openDBSession()
+	initDB(DBSession)
 }
 
 // Run will start the web server.
 func Run() {
-	addr := "0.0.0.0:8000"
-	api := NewAPIServer()
-	addRoutes(api)
+	router := gin.Default()
 
-	srv := &http.Server{
-		Handler:      api.router,
-		Addr:         addr,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"gvent": gin.H{"version": version.Version}})
+	})
+	addEventRoutes(router)
 
-	log.Infof("Listening at %s", addr)
-	log.Fatal(srv.ListenAndServe())
+	router.Run("0.0.0.0:8000")
 }
