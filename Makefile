@@ -2,7 +2,7 @@
 
 build:
 	mkdir -p ./build
-	GOARCH=amd64 GOOS=linux go build -o ./build/rechat github.com/jmckind/gvent-api/cmd
+	GOARCH=amd64 GOOS=linux go build -o ./build/gvent-api github.com/jmckind/gvent-api/cmd
 
 clean:
 	rm -fr ./build
@@ -13,5 +13,5 @@ dep:
 image:
 	docker build -t jmckind/gvent-api:latest .
 
-run:
-	LOG_LEVEL=debug go run github.com/jmckind/gvent-api/cmd
+run: build
+	LOG_LEVEL=debug ./build/gvent-api
