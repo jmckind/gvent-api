@@ -15,27 +15,17 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jmckind/gvent-api/pkg/gvent/datastore"
-	"github.com/jmckind/gvent-api/version"
-	log "github.com/sirupsen/logrus"
 )
 
-// Run will start the web server.
-func Run() {
-	db := datastore.NewDatabaseConnection()
-	if db == nil {
-		log.Fatal("database connection unavailable, cowardly refusing to proceed")
-	}
+// RequestHandler encapsulates all request handling logic.
+type RequestHandler struct {
+	DB     *datastore.Database
+	Router *gin.Engine
+}
 
-	router := gin.Default()
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"gvent-api": gin.H{"version": version.Version}})
-	})
-	NewEventHandler(db, router)
-
-	router.Run("0.0.0.0:8000")
+// NewRequestHandler will create a new RequestHandler.
+func NewRequestHandler(db *datastore.Database, router *gin.Engine) *RequestHandler {
+	return &RequestHandler{DB: db, Router: router}
 }

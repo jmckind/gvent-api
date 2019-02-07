@@ -18,24 +18,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jmckind/gvent-api/pkg/gvent/datastore"
-	"github.com/jmckind/gvent-api/version"
 	log "github.com/sirupsen/logrus"
 )
 
-// Run will start the web server.
-func Run() {
-	db := datastore.NewDatabaseConnection()
-	if db == nil {
-		log.Fatal("database connection unavailable, cowardly refusing to proceed")
-	}
+func unexpectedError(c *gin.Context, err error) {
+	log.Errorf("unexpected error: %v", err)
+	c.JSON(http.StatusInternalServerError, gin.H{"error": "An unexpected error has occurred, please try again later."})
+}
 
-	router := gin.Default()
-
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"gvent-api": gin.H{"version": version.Version}})
-	})
-	NewEventHandler(db, router)
-
-	router.Run("0.0.0.0:8000")
+func validationError(c *gin.Context, err error) {
+	log.Debug("validation error: %v", err)
+	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 }
