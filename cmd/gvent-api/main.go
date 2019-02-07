@@ -18,7 +18,7 @@ import (
 	"os"
 	"runtime"
 
-	api "github.com/jmckind/gvent-api/pkg/gvent/api"
+	"github.com/jmckind/gvent-api/pkg/gvent/api"
 	"github.com/jmckind/gvent-api/version"
 	log "github.com/sirupsen/logrus"
 )
@@ -46,7 +46,7 @@ func configureLogging() {
 
 // printVersion outputs the architecture and application versions.
 func printVersion() {
-	log.Infof("Go Version: %s", runtime.Version())
-	log.Infof("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH)
-	log.Infof("operator-sdk Version: %v", version.Version)
+	log.Infof("go version: %s", runtime.Version())
+	log.Infof("go os/arch: %s/%s", runtime.GOOS, runtime.GOARCH)
+	log.Infof("gvent-api version: %v", version.Version)
 }

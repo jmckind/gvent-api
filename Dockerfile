@@ -4,7 +4,7 @@ RUN apk --update add --no-cache ca-certificates git
 RUN go get -u github.com/jmckind/gvent-api/...
 
 RUN env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-        go build -a -ldflags="-w -s" -o /usr/local/bin/gvent-api github.com/jmckind/gvent-api/cmd \
+        go build -a -ldflags="-w -s" -o /usr/local/bin/gvent-api github.com/jmckind/gvent-api/cmd/gvent-api \
     && ls -lh /usr/local/bin/gvent-api
 
 # Create the runtime image

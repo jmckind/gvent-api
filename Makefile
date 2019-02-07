@@ -1,8 +1,8 @@
 .PHONY: build clean dep run setup
 
 # build the application binaries
-build: setup
-	go build -o ./build/gvent-api github.com/jmckind/gvent-api/cmd
+build:
+	GOOS=linux GOARCH=amd64 go build -o ./build/gvent-api github.com/jmckind/gvent-api/cmd/gvent-api
 
 # clean out any build artifacts
 clean:
