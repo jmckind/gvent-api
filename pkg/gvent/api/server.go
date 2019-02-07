@@ -29,6 +29,7 @@ func Run() {
 	if db == nil {
 		log.Fatal("database connection unavailable, cowardly refusing to proceed")
 	}
+	db.Initialize()
 
 	router := gin.Default()
 
