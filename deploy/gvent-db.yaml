@@ -1,0 +1,59 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gvent-db
+  labels:
+    app: gvent-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gvent-db
+  template:
+    metadata:
+      labels:
+        app: gvent-db
+    spec:
+      containers:
+      - name: db
+        image: jmckind/rethinkdb:2.3.6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: admin
+          containerPort: 8080
+          protocol: TCP
+        - name: driver
+          containerPort: 28015
+          protocol: TCP
+        - name: cluster
+          containerPort: 29015
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
+          requests:
+            cpu: "250m" 
+            memory: "64Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gvent-db
+  labels:
+    app: gvent-db
+spec:
+  selector:
+    app: gvent-db
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+  - name: admin
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: driver
+    port: 28015
+    targetPort: 28015
+    protocol: TCP
