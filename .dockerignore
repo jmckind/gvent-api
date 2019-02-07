@@ -1,0 +1,7 @@
+.git/
+.gitignore
+doc/
+Gopkg.*
+LICENSE
+Makefile
+*.md
