@@ -1,8 +1,8 @@
-.PHONY: build clean dep run setup
+.PHONY: build clean dep reset run setup
 
 # build the application binaries
 build:
-	GOOS=linux GOARCH=amd64 go build -o ./build/gvent-api github.com/jmckind/gvent-api/cmd/gvent-api
+	go build -o ./build/gvent-api github.com/jmckind/gvent-api/cmd/gvent-api
 
 # clean out any build artifacts
 clean:
@@ -10,7 +10,7 @@ clean:
 
 # ensure dependencies are installed
 dep:
-	dep ensure && dep status
+	dep ensure -v && dep status
 
 # reset the local project to a pristine state
 reset: clean
@@ -20,6 +20,6 @@ reset: clean
 run: build
 	LOG_LEVEL=debug ./build/gvent-api
 
-# ensure build directories and dependencies are present
+# ensure local project is ready for development
 setup: dep
 	mkdir -p ./build
