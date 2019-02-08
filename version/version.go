@@ -16,5 +16,5 @@ package version
 
 var (
 	// Version is the gvent application version.
-	Version = "0.0.3"
+	Version = "0.0.4"
 )
